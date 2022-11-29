@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 
@@ -7,9 +6,7 @@ import { getAuth } from './firebase-app';
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.options('*', cors());
 app.use(morgan('combined'));
-app.use(cors());
 app.get('/', (_req, res) => res.type('text').send('HELLO FROM FIREBASE AUTH!'));
 app.get('/me', async (req, res) => {
   try {
