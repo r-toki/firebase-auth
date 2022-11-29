@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 
@@ -6,7 +7,9 @@ import { getAuth } from './firebase-app';
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.options('*', cors());
 app.use(morgan('combined'));
+app.use(cors());
 app.get('/', (_req, res) => res.type('text').send('HELLO FROM FIREBASE AUTH!'));
 app.get('/me', async (req, res) => {
   try {
@@ -14,7 +17,8 @@ app.get('/me', async (req, res) => {
     if (!token) throw new Error('token not found');
     const decodedToken = await getAuth().verifyIdToken(token);
     return res.type('json').send(decodedToken);
-  } catch {
+  } catch (e) {
+    console.error(e);
     return res.status(403).type('json').send({ error: 'Forbidden' });
   }
 });
